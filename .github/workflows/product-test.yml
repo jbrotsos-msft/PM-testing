@@ -43,7 +43,8 @@ jobs:
       run: |
         ./defender scan image 'vuln/testdocker:latest' 
       continue-on-error: true
-      #env:
+      env:
+        DfdBackendServiceEnvironment: 'PPE'
       #  GDN_MDC_CLI_TENANT_ID: ${{ secrets.GDN_MDC_CLI_TENANT_ID }}
       #  GDN_MDC_CLI_CLIENT_ID: ${{ secrets.GDN_MDC_CLI_CLIENT_ID }}
       #  GDN_MDC_CLI_CLIENT_SECRET: ${{ secrets.GDN_MDC_CLI_CLIENT_SECRET }}
