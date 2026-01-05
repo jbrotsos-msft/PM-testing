@@ -48,11 +48,6 @@ jobs:
       with:
         name: docker-image
     
-    - name: Load Docker image
-      shell: pwsh
-      run: |
-        docker load -i vulnerable-app-image.tar
-    
     - name: Download Defender CLI
       shell: pwsh
       run: |
@@ -61,7 +56,7 @@ jobs:
     - name: Run Defender CLI Scan
       shell: pwsh
       run: |
-        ./defender.exe scan image 'localhost/vulnerable-app:latest' 
+        ./defender.exe scan image vulnerable-app-image.tar 
       continue-on-error: true
       # env:
       #   GDN_MDC_CLI_TENANT_ID: ${{ secrets.GDN_MDC_CLI_TENANT_ID }}
