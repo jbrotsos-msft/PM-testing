@@ -15,39 +15,12 @@ permissions:
   pull-requests: write
   id-token: write
 
-jobs:
-  build-image:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Build Docker image
-      run: |
-        docker build -t localhost/vulnerable-app:latest .
-    
-    - name: Save Docker image
-      run: |
-        docker save localhost/vulnerable-app:latest -o vulnerable-app-image.tar
-    
-    - name: Upload Docker image artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: docker-image
-        path: vulnerable-app-image.tar
-        retention-days: 1
-    
+jobs:   
   defender-scan:
     ### Functional Requirement: Must run on Windows environment
-    needs: build-image
     runs-on: windows-latest    
     
     steps:
-    - name: Download Docker image artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: docker-image
-    
     - name: Download Defender CLI
       shell: pwsh
       run: |
@@ -56,14 +29,7 @@ jobs:
     - name: Run Defender CLI Scan
       shell: pwsh
       run: |
-        # Verify the Docker image tar file exists before scanning
-        if (-Not (Test-Path "vulnerable-app-image.tar")) {
-          Write-Error "Docker image tar file not found: vulnerable-app-image.tar"
-          exit 1
-        }
-        # Scan the tar file directly without loading it into Docker
-        # This is more efficient and keeps the image available in the filesystem for other tools
-        ./defender.exe scan image vulnerable-app-image.tar 
+        ./defender.exe scan image 'vuln/testdocker:latest' 
       continue-on-error: true
       # env:
       #   GDN_MDC_CLI_TENANT_ID: ${{ secrets.GDN_MDC_CLI_TENANT_ID }}
