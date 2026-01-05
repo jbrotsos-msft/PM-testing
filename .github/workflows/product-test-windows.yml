@@ -16,10 +16,8 @@ permissions:
   id-token: write
 
 jobs:
-  defender-scan:
-    ### Functional Requirement: Must run on Windows environment
-    runs-on: windows-latest
-    
+  build-image:
+    runs-on: ubuntu-linux
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -28,7 +26,13 @@ jobs:
       shell: pwsh
       run: |
         docker build -t localhost/vulnerable-app:latest .
-        
+    
+  defender-scan:
+    ### Functional Requirement: Must run on Windows environment
+    needs: build-image
+    runs-on: windows-latest    
+    
+    steps:    
     - name: Download Defender CLI
       shell: pwsh
       run: |
