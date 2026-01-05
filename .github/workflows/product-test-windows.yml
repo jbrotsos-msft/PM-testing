@@ -27,12 +27,34 @@ jobs:
       run: |
         docker build -t localhost/vulnerable-app:latest .
     
+    - name: Save Docker image
+      shell: pwsh
+      run: |
+        docker save localhost/vulnerable-app:latest -o vulnerable-app-image.tar
+    
+    - name: Upload Docker image artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: docker-image
+        path: vulnerable-app-image.tar
+        retention-days: 1
+    
   defender-scan:
     ### Functional Requirement: Must run on Windows environment
     needs: build-image
     runs-on: windows-latest    
     
-    steps:    
+    steps:
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: docker-image
+    
+    - name: Load Docker image
+      shell: pwsh
+      run: |
+        docker load -i vulnerable-app-image.tar
+    
     - name: Download Defender CLI
       shell: pwsh
       run: |
