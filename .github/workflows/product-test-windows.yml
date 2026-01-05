@@ -56,6 +56,13 @@ jobs:
     - name: Run Defender CLI Scan
       shell: pwsh
       run: |
+        # Verify the Docker image tar file exists before scanning
+        if (-Not (Test-Path "vulnerable-app-image.tar")) {
+          Write-Error "Docker image tar file not found: vulnerable-app-image.tar"
+          exit 1
+        }
+        # Scan the tar file directly without loading it into Docker
+        # This is more efficient and keeps the image available in the filesystem for other tools
         ./defender.exe scan image vulnerable-app-image.tar 
       continue-on-error: true
       # env:
