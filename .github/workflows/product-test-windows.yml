@@ -23,12 +23,10 @@ jobs:
       uses: actions/checkout@v4
       
     - name: Build Docker image
-      shell: pwsh
       run: |
         docker build -t localhost/vulnerable-app:latest .
     
     - name: Save Docker image
-      shell: pwsh
       run: |
         docker save localhost/vulnerable-app:latest -o vulnerable-app-image.tar
     
