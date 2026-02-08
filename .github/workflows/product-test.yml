@@ -41,8 +41,14 @@ jobs:
 
     - name: Run Defender CLI Scan (Built)
       run: |
-        ./defender scan image 'vuln/testdocker:latest' 
+        ./defender scan image 'localhost/vulnerable-app:latest' --output-formats html --defender-output output.html
       continue-on-error: true
+
+    - name: Upload production-ready artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: results
+        path: output.html
 
     - name: Upload SARIF to Code Scanning
       if: always()
