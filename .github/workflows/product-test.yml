@@ -41,7 +41,7 @@ jobs:
 
     - name: Run Defender CLI Scan (Built)
       run: |
-        ./defender scan image 'localhost/vulnerable-app:latest' --output-formats html --defender-output output.html
+        ./defender scan image 'vuln/testdocker:latest' --output-formats html --defender-output output.html
       continue-on-error: true
 
     - name: Upload production-ready artifact
